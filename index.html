@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Chat Bot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      background-image: url('https://images.pexels.com/photos/3761509/pexels-photo-3761509.jpeg');
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+    }
+    #chat-container {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden">
+    <div class="bg-indigo-600 text-white p-4">
+      <h1 class="text-xl font-bold">Telegram Chat Bot</h1>
+      <p class="text-sm opacity-80">Connected to your Telegram account</p>
+    </div>
+    
+    <div id="chat-container" class="h-96 p-4 overflow-y-auto space-y-3">
+      <div class="flex justify-start">
+        <div class="bg-gray-200 rounded-lg p-3 max-w-xs">
+          <p>Hello! I'm your Telegram bot. Start chatting!</p>
+          <p class="text-xs text-gray-500 mt-1">Just now</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-4 border-t border-gray-200 flex">
+      <input 
+        id="message-input" 
+        type="text" 
+        placeholder="Type a message..." 
+        class="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        autocomplete="off"
+      >
+      <button 
+        id="send-button" 
+        class="bg-indigo-600 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-700 transition"
+      >
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const chatContainer = document.getElementById('chat-container');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+
+    // Handle sending messages
+    function sendMessage() {
+      const message = messageInput.value.trim();
+      
+      if (message) {
+        addMessageToChat(message, 'user');
+        messageInput.value = '';
+        
+        // Simulate bot response (in a real app, this would be an API call)
+        setTimeout(() => {
+          addMessageToChat(`You said: ${message}`, 'bot');
+          scrollToBottom();
+        }, 1000);
+      }
+    }
+
+    // Add message to chat UI
+    function addMessageToChat(text, sender) {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+      
+      messageDiv.innerHTML = `
+        <div class="${sender === 'user' ? 'bg-indigo-100' : 'bg-gray-200'} rounded-lg p-3 max-w-xs">
+          <p>${text}</p>
+          <p class="text-xs ${sender === 'user' ? 'text-indigo-500' : 'text-gray-500'} mt-1">${timeString}</p>
+        </div>
+      `;
+      
+      chatContainer.appendChild(messageDiv);
+    }
+
+    // Auto-scroll to bottom of chat
+    function scrollToBottom() {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Event listeners
+    sendButton.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    // Initial scroll to bottom
+    scrollToBottom();
+  </script>
+</body>
+</html>
