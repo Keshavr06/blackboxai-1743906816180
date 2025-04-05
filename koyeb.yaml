@@ -1,0 +1,20 @@
+# Koyeb deployment configuration
+services:
+  - name: telegram-bot
+    ports:
+      - port: 8000
+        http: {}
+    env:
+      - key: TELEGRAM_TOKEN
+        value: YOUR_ACTUAL_TELEGRAM_TOKEN  # Replace with your real token
+      - key: NODE_ENV
+        value: production
+    regions:
+      - fra  # Frankfurt region
+      - nyc  # New York region
+    scaling:
+      min: 1  # Minimum 1 instance always running
+      max: 3  # Scale up to 3 instances under load
+    docker:
+      image: koyeb/node:18
+      command: ["npm", "start"]
